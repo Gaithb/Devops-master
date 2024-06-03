@@ -1,0 +1,43 @@
+version: '3.7'
+services:
+      
+  devops-db:
+    container_name: devops-db
+    image: mysql:8.0
+    networks:
+      - devops-network
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=achatdb
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - dbvol:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: always
+
+  devops-app:
+    build:
+      context: .
+    container_name: devops-spring
+    image: ala/devops:latest
+    ports:
+      - "8089:8089"
+    networks:
+      - devops-network
+    depends_on:
+      - devops-db
+    environment:
+      - MYSQL_HOST=devops-db
+      - MYSQL_USERNAME=new_user
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=achatdb
+      - MYSQL_PORT=3306
+      
+networks:
+  devops-network:
+    name: devops-network
+
+volumes:
+  dbvol:
