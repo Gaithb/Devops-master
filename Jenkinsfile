@@ -47,20 +47,10 @@ pipeline {
         
         stage('Deploy to Nexus') {
             steps {
-                nexusArtifactUploader artifacts: [[
-                    artifactId: 'achat', 
-                    classifier: '', 
-                    file: 'achat/target/achat-1.9'
-                ]], 
-                credentialsId: '2bbeb356-05a7-47dd-9332-f1f073219cf0', 
-                groupId: 'achat', 
-                nexusUrl: 'http://192.168.2.164:8081', 
-                nexusVersion: 'nexus2', 
-                protocol: 'http', 
-                repository: 'maven-snapshots', 
-                version: '1.4-SNAPSHOT'
+                script {
+                    sh "mvn deploy"
+                }
             }
-        }
     }
     
     post {
