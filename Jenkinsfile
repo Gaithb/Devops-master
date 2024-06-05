@@ -44,6 +44,13 @@ pipeline {
                 }
             }
         }
+        
+        stage('Deploy to Nexus') {
+            steps {
+                // You can use Maven's deploy plugin to deploy artifacts to Nexus
+                sh 'mvn deploy:deploy-file -Durl=http://192.168.2.164:8081/repository/maven-releases/ -DrepositoryId=nexus-releases -Dfile=path/to/your/artifact.jar -DgroupId=your.groupId -DartifactId=your-artifactId -Dversion=1.0.0 -Dpackaging=jar'
+            }
+        }
     }
     
     post {
