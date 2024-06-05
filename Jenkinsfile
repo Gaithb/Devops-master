@@ -1,8 +1,6 @@
 pipeline {
     agent any
-    environment {
-        DOCKERHUB_CREDENTIALS = credentials('docker-credential')
-    }
+
     tools {
         maven 'M2_HOME'
     }
@@ -60,14 +58,7 @@ pipeline {
             }
         }
                          
-        stage('Build docker image') {
-            steps {
-                script {
-                    sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/devopsimage:latest .'
-                }
-            }
-        }
-         
+
         stage("Maven Build") {
             steps {
                 script {
@@ -76,13 +67,7 @@ pipeline {
             }
         }
 			
-        stage('Docker login') {
-            steps {
-                sh 'echo "login Docker ...."'
-                sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
-            } 
-        }
-        
+
         stage('Docker push') {
             steps {
                 sh 'echo "Docker is pushing ...."'
