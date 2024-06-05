@@ -50,7 +50,7 @@ pipeline {
                 nexusArtifactUploader artifacts: [[
                     artifactId: 'achat', 
                     classifier: '', 
-                    file: 'achat/target/achat.war'
+                    file: 'achat/target/achat.jar'
                 ]], 
                 credentialsId: '2bbeb356-05a7-47dd-9332-f1f073219cf0', 
                 groupId: 'achat', 
