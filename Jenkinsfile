@@ -52,6 +52,15 @@ pipeline {
                 }
             }
         }
+                            
+        stage('Build docker image'){
+            steps{
+              script{
+                sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/devopsimage:latest .'
+               
+                 }
+            }
+         }
     }
     
     post {
