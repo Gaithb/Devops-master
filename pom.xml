@@ -16,7 +16,7 @@
          <distributionManagement>
            <repository>
            <id>maven-nexus-repo</id>
-           <url>http://http://192.168.2.164:8081/repository/maven-nexus-repo/</url>
+           <url>http://192.168.2.164:8081/repository/maven-nexus-repo/</url>
            </repository>
          </distributionManagement>
     <properties>
