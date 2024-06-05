@@ -1,91 +1,40 @@
 pipeline {
     agent any
-    tools {
-        maven "Maven"
-    }
-    environment {
-        NEXUS_VERSION = "nexus3"
-        NEXUS_PROTOCOL = "http"
-        NEXUS_URL = "172.17.0.3:8081"
-        NEXUS_REPOSITORY = "maven-nexus-repo"
-        NEXUS_CREDENTIAL_ID = "nexus"
-    }
-    stages {
-        stage("Clone code from VCS") {
-            steps {
-                script {
-                    git 'https://github.com/mahouESPRIT/cicd.git';
-                }
-            }
-        }
-        stage("Maven Build") {
-            steps {
-                script {
-                    sh "mvn package -DskipTests=true"
-                }
-            }
-        }
-         
-        
-        stage("Publish to Nexus Repository Manager") {
-            steps {
-                script {
-                    pom = readMavenPom file: "pom.xml";
-                    filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
-                    echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
-                    artifactPath = filesByGlob[0].path;
-                    artifactExists = fileExists artifactPath;
-                    if(artifactExists) {
-                        echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
-                        nexusArtifactUploader(
-                            nexusVersion: NEXUS_VERSION,
-                            protocol: NEXUS_PROTOCOL,
-                            nexusUrl: NEXUS_URL,
-                            groupId: pom.groupId,
-                            version: pom.version,
-                            repository: NEXUS_REPOSITORY,
-                            credentialsId: NEXUS_CREDENTIAL_ID,
-                            artifacts: [
-                                [artifactId: pom.artifactId,
-                                classifier: '',
-                                file: artifactPath,
-                                type: pom.packaging],
-                                [artifactId: pom.artifactId,
-                                classifier: '',
-                                file: "pom.xml",
-                                type: "pom"]
-                            ]
-                        );
-                    } else {
-                        error "*** File: ${artifactPath}, could not be founddd";
-                    }
-                }
-            }
-            
-        }
-        stage("Docker build"){
-         steps {
-         sh 'docker version'
-         sh 'docker build -t esprit .'
-         sh 'docker image list'
-         sh 'docker tag esprit ayoubmahou/cicd:1.8'
-        
-        withCredentials([string(credentialsId: 'DOCKER_HUB_PASSWORD', variable: 'PASSWORD')]) {
-            sh 'docker login -u ayoubmahou -p $PASSWORD'
-        }
-       }
-  }
-    stage("Push Image to Docker Hub"){
-      steps {
-       sh 'docker push  ayoubmahou/cicd:1.8'
-       sh 'docker-compose up'
 
+    tools {
+        maven 'M2_HOME'
     }
+
+    stages {
+        stage('Git') {
+            steps {
+                git branch: 'Gaith-b',
+                    url: 'https://github.com/Gaithb/Devops-master.git'
+            }
+        }    
+
+        stage('Maven clean and install') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('MAVEN SONARQUBE') {
+            steps {
+                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=sonar'
+            }
+        }
     }
-    }
+
     post {
         always {
-            emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
+            echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Pipeline succeeded.'
+        }
+        failure {
+            echo 'Pipeline failed.'
         }
     }
 }
