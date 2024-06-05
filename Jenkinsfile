@@ -45,13 +45,23 @@ pipeline {
             }
         }
         
-        stage('Deploy to Nexus') {
-            steps {
-                // You can use Maven's deploy plugin to deploy artifacts to Nexus
-                sh 'mvn deploy:deploy-file -Durl=http://192.168.2.164:8081/repository/maven-releases/ -DrepositoryId=nexus-releases -Dfile=path/to/your/artifact.jar -DgroupId=your.groupId -DartifactId=your-artifactId -Dversion=1.0.0 -Dpackaging=jar'
-            }
-        }
+stage('Deploy to Nexus') {
+    steps {
+        nexusArtifactUploader artifacts: [[
+            artifactId: 'achat', 
+            classifier: '', 
+            file: 'achat/target/achat.war'
+        ]], 
+        credentialsId: '2bbeb356-05a7-47dd-9332-f1f073219cf0', 
+        groupId: 'achat', 
+        nexusUrl: 'http://192.168.2.164:8081', 
+        nexusVersion: 'nexus2', 
+        protocol: 'http', 
+        repository: 'maven-snapshots', 
+        version: '1.4-SNAPSHOT'
     }
+}
+
     
     post {
         always {
