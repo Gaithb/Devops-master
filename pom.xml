@@ -90,7 +90,7 @@
             <plugin>
                 <groupId>org.sonatype.nexus</groupId>
                 <artifactId>nexus-plugin-bundle-maven-plugin</artifactId>
-                <version>1.0.0</version> <!-- Changed version -->
+                <version>1.4.0</version> <!-- Changed version -->
                 <extensions>true</extensions>
             </plugin>
         </plugins>
@@ -99,12 +99,6 @@
         <repository>
             <id>sonatype-oss-public</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
         </repository>
     </repositories>
 </project>
