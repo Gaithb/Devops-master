@@ -30,8 +30,8 @@ services:
       - devops-db
     environment:
       - MYSQL_HOST=devops-db
-      - MYSQL_USERNAME=new_user
-      - MYSQL_PASSWORD=password
+      - MYSQL_USERNAME=gaith
+      - MYSQL_PASSWORD=docker
       - MYSQL_DATABASE=achatdb
       - MYSQL_PORT=3306
       
