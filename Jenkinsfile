@@ -1,6 +1,9 @@
 pipeline {
     agent any
+    environment {
 
+        DOCKERHUB_CREDENTIALS = credentials('dockerHub')
+    }
     tools {
         maven 'M2_HOME'
     }
@@ -53,6 +56,12 @@ pipeline {
             }
         }
                             
+        stage('Build Maven Spring'){
+             steps{
+                sh 'mvn clean install '
+                 }
+        }
+                         
         stage('Build docker image'){
             steps{
               script{
@@ -61,7 +70,43 @@ pipeline {
                  }
             }
          }
+         
+         stage("Maven Build") {
+            steps {
+                script {
+                    sh "mvn package -DskipTests=true"
+                }
+            }
+        }
+			
+         
+                         
+        stage('Docker login') {
+                     steps {
+                    sh 'echo "login Docker ...."'
+                   	sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
+                               } 
+                               }
+        
+        stage('Docker push') {
+                 steps {
+                      sh 'echo "Docker is pushing ...."'
+                       sh 'docker push $DOCKERHUB_CREDENTIALS_USR/devopsimage:latest'
+                     	 
+                        }  
+            
+        }
+        stage('docker compose'){
+                         steps{
+                                script{
+                                 sh ' docker-compose up -d'
+                                 }
+                           }
+          }
+
+       
     }
+}
     
     post {
         always {
