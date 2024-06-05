@@ -44,7 +44,9 @@
                 }
             }
         }
-       
+        
+
+    }
     
     post {
         always {
@@ -57,5 +59,4 @@
             echo 'Pipeline failed.'
         }
     }
-
-    }}
+    }
