@@ -6,41 +6,46 @@ pipeline {
     }
 
     stages {
-        stage('GIT ') {
+        stage('Checkout') {
             steps {
                 git branch: 'Gaith-b',
                     url: 'https://github.com/Gaithb/Devops-master.git'
             }
         }    
-        stage('CLEAN') {
+
+        stage('Clean') {
             steps {
                 sh 'mvn clean'
             }
         }
         
-        stage('Maven install') {
+        stage('Build') {
             steps {
                 sh 'mvn install'
             }
         }
-     stage('MVN TEST') {
-         steps {
-              sh 'mvn test'
-           }
+        
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
         }
-        stage('MAVEN SONARQUBE') {
+        
+        stage('SonarQube Analysis') {
             steps {
                 sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=sonar'
             }
         }
-    }
-         stage("Maven Build") {
+        
+        stage('Package') {
             steps {
                 script {
                     sh "mvn package -DskipTests=true"
                 }
             }
         }
+    }
+    
     post {
         always {
             echo 'Pipeline finished.'
