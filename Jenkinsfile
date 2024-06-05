@@ -1,13 +1,11 @@
 pipeline {
     agent any
     environment {
-
         DOCKERHUB_CREDENTIALS = credentials('dockerHub')
     }
     tools {
         maven 'M2_HOME'
     }
-
     stages {
         stage('Checkout') {
             steps {
@@ -55,23 +53,22 @@ pipeline {
                 }
             }
         }
-                            
-        stage('Build Maven Spring'){
-             steps{
-                sh 'mvn clean install '
-                 }
+        
+        stage('Build Maven Spring') {
+            steps {
+                sh 'mvn clean install'
+            }
         }
                          
-        stage('Build docker image'){
-            steps{
-              script{
-                sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/devopsimage:latest .'
-               
-                 }
+        stage('Build docker image') {
+            steps {
+                script {
+                    sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/devopsimage:latest .'
+                }
             }
-         }
+        }
          
-         stage("Maven Build") {
+        stage("Maven Build") {
             steps {
                 script {
                     sh "mvn package -DskipTests=true"
@@ -79,34 +76,28 @@ pipeline {
             }
         }
 			
-         
-                         
         stage('Docker login') {
-                     steps {
-                    sh 'echo "login Docker ...."'
-                   	sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
-                               } 
-                               }
+            steps {
+                sh 'echo "login Docker ...."'
+                sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
+            } 
+        }
         
         stage('Docker push') {
-                 steps {
-                      sh 'echo "Docker is pushing ...."'
-                       sh 'docker push $DOCKERHUB_CREDENTIALS_USR/devopsimage:latest'
-                     	 
-                        }  
-            
+            steps {
+                sh 'echo "Docker is pushing ...."'
+                sh 'docker push $DOCKERHUB_CREDENTIALS_USR/devopsimage:latest'
+            }  
         }
-        stage('docker compose'){
-                         steps{
-                                script{
-                                 sh ' docker-compose up -d'
-                                 }
-                           }
-          }
-
-       
+        
+        stage('docker compose') {
+            steps {
+                script {
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
     }
-}
     
     post {
         always {
@@ -119,4 +110,4 @@ pipeline {
             echo 'Pipeline failed.'
         }
     }
-    }
+}
