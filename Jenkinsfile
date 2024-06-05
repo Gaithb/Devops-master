@@ -51,6 +51,7 @@ pipeline {
                     sh "mvn deploy"
                 }
             }
+        }
     }
     
     post {
@@ -64,5 +65,4 @@ pipeline {
             echo 'Pipeline failed.'
         }
     }
-}
 }
