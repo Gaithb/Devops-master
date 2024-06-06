@@ -4,7 +4,6 @@ pipeline {
     environment {
         MAIN_VERSION = "1.1"
         BUILD_VERSION = "${MAIN_VERSION}-b${env.BUILD_NUMBER}"
-        DOCKER_CREDENTIALS = credentials('20f8a19d-ef23-4271-94fa-e490ba447dc1')
     }
 
     tools {
@@ -49,20 +48,12 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: '20f8a19d-ef23-4271-94fa-e490ba447dc1', variable: 'dockerGaith')]) {
-                        sh 'docker login -u devopshint -p ${dockerGaith}'
+                        sh 'echo ${dockerGaith} | docker login -u devopshint --password-stdin'
                         sh 'docker push Gaithb/achat:1.9'
                     }
                 }
             }
         }
-
-        // stage('Docker compose (FrontEnd BackEnd MySql)') {
-        //     steps {
-        //         script {
-        //             sh '/usr/local/bin/docker-compose up -d'
-        //         }
-        //     }
-        // }
 
         stage('Deploy to Nexus') {
             steps {
