@@ -1,9 +1,10 @@
 pipeline {
     agent any
-
+    
     environment {
         MAIN_VERSION = "1.1"
         BUILD_VERSION = "${MAIN_VERSION}-b${env.BUILD_NUMBER}"
+        DOCKER_CREDENTIALS = credentials('20f8a19d-ef23-4271-94fa-e490ba447dc1')
     }
 
     tools {
@@ -44,15 +45,17 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image to DockerHub') {
-            steps {
-                script {
-                    withCredentials([string(credentialsId: '20f8a19d-ef23-4271-94fa-e490ba447dc1', variable: 'dockerGaith')]) {
-                        sh '    docker login -u devopshint -p (dockerGaith)'
-                        sh 'docker push Gaithb/achat:1.9.'
+
+stage('Push Docker Image to DockerHub') {
+                    steps {
+                        script {
+                            withCredentials([usernamePassword(credentialsId: '20f8a19d-ef23-4271-94fa-e490ba447dc1', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+
+                            sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
+                            sh "docker push Gaithb/achat:${BUILD_VERSION}"
+                        }
                     }
                 }
-            }
         }
 
         stage('Deploy to Nexus') {
