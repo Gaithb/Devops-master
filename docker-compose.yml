@@ -1,43 +1,31 @@
-version: '3.7'
+version : "3.8"
+
 services:
-      
-  devops-db:
-    container_name: devops-db
-    image: mysql:8.0
-    networks:
-      - devops-network
+  mysqldb:
+    image: mysql:5.7
+    restart: unless-stopped
     environment:
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=password
-      - MYSQL_DATABASE=achatdb
       - MYSQL_ROOT_PASSWORD=root
-    volumes:
-      - dbvol:/var/lib/mysql
+      - MYSQL_DATABASE=dbmysql
     ports:
       - "3306:3306"
-    restart: always
-
-  devops-app:
-    build:
-      context: .
-    container_name: devops-spring
-    image: gaith/devops:latest
-    ports:
-      - "8089:8089"
-    networks:
-      - devops-network
+    volumes:
+      - db:/var/lib/mysql
+  app-timesheet:
     depends_on:
-      - devops-db
+      - mysqldb
+    image: Gaithb/Devops-master:${BUILD_VERSION}
+    restart: unless-stopped
+    ports:
+      - "8082:8082"
     environment:
-      - MYSQL_HOST=devops-db
-      - MYSQL_USERNAME=gaith
-      - MYSQL_PASSWORD=docker
-      - MYSQL_DATABASE=achatdb
-      - MYSQL_PORT=3306
-      
-networks:
-  devops-network:
-    name: devops-network
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url" : "jdbc:mysql://localhost:3306/timesheet-devops-db?createDatabaseIfNotExist=true",
+        "spring.datasource.username" : "root",
+        "spring.datasource.password" : "root",
+        "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL5InnoDBDialect",
+        "spring.jpa.hibernate.ddl-auto" : "update"
+      }'
 
 volumes:
-  dbvol:
+  db:
