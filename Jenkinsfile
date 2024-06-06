@@ -40,7 +40,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    sh 'docker build -t Gaithb/achat:${BUILD_VERSION} .'
+                    sh 'docker build -t docker.io/gaihdocker/achat:${BUILD_VERSION} .'
                 }
             }
         }
@@ -50,7 +50,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: '5a994b69-2de9-4b5c-a541-1f9495092a2a', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                         sh "echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin"
-                        sh "docker push Gaithb/achat:${BUILD_VERSION}"
+                        sh "docker push docker.io/gaihdocker/achat:${BUILD_VERSION}"
                     }
                 }
             }
