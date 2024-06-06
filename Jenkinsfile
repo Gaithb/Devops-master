@@ -37,24 +37,24 @@ pipeline {
             }
         }
 
-      //  stage('Docker Build') {
-        //    steps {
-          //      script {
-            //        docker.build("ssdrissi/timesheet-devops:${env.BUILD_VERSION}")
-              //  }
-           // }
-        //}
-
-       // stage('Push Docker Image to DockerHub') {
-         //   steps {
-           //     script {
-             //       withCredentials([usernamePassword(credentialsId: '307f196d-c538-49e8-b350-bc5caa31b442', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
-               //         sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
-                 //       sh "docker push ssdrissi/timesheet-devops:${env.BUILD_VERSION}"
-                  //  }
-               // }
-        //    }
-     //   }
+        stage('Docker Build') {
+            steps {
+                script {
+                    sh 'docker.build -t Gaithb/achat-1.9 . ' 
+                }
+            }
+        }
+    
+        stage('Push Docker Image to DockerHub') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: '20f8a19d-ef23-4271-94fa-e490ba447dc1', variable: 'dockerGaith')]) {
+                    sh 'docker login -u devopshint -p ${dockerGaith}'
+                    sh 'docker push dockerGaith/achat-1.9 .
+                    }
+                }
+            }
+        }
 
        // stage('Docker compose (FrontEnd BackEnd MySql)') {
          //   steps {
