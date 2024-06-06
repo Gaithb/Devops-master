@@ -4,7 +4,7 @@ pipeline {
     environment {
         MAIN_VERSION = "1.1"
         BUILD_VERSION = "${MAIN_VERSION}-b${env.BUILD_NUMBER}"
-        DOCKER_CREDENTIALS = credentials('20f8a19d-ef23-4271-94fa-e490ba447dc1')
+        DOCKER_CREDENTIALS = credentials('docker-hub-credentials')
     }
 
     tools {
@@ -40,22 +40,20 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    sh 'docker build -t Gaithb/achat:1.9 .'
+                    sh 'docker build -t Gaithb/achat:${BUILD_VERSION} .'
                 }
             }
         }
 
-
-stage('Push Docker Image to DockerHub') {
-                    steps {
-                        script {
-                            withCredentials([usernamePassword(credentialsId: '20f8a19d-ef23-4271-94fa-e490ba447dc1', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
-
-                            sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
-                            sh "docker push Gaithb/achat:${BUILD_VERSION}"
-                        }
+        stage('Push Docker Image to DockerHub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
+                        sh "docker push Gaithb/achat:${BUILD_VERSION}"
                     }
                 }
+            }
         }
 
         stage('Deploy to Nexus') {
