@@ -1,4 +1,4 @@
 FROM openjdk:17
-COPY target/achat-${BUILD_VERSION}.jar /app/achat-${BUILD_VERSION}.jar
+COPY target/achat-1.9.jar /app/achat.jar
 EXPOSE 8082
-ENTRYPOINT ["java", "-jar", "/app/achat-${BUILD_VERSION}.jar"]
+ENTRYPOINT ["java", "-jar", "/app/achat.jar"]
