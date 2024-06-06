@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     environment {
         MAIN_VERSION = "1.9"
         BUILD_VERSION = "${MAIN_VERSION}-b${env.BUILD_NUMBER}"
@@ -52,6 +52,15 @@ pipeline {
                         sh "echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin"
                         sh "docker push docker.io/gaihdocker/achat:${BUILD_VERSION}"
                     }
+                }
+            }
+        }
+
+        stage('Deploy with Docker Compose') {
+            steps {
+                script {
+                    sh 'docker-compose down'
+                    sh 'docker-compose up -d'
                 }
             }
         }
