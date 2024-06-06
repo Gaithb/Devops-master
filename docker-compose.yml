@@ -21,7 +21,7 @@ services:
     build:
       context: .
     container_name: devops-spring
-    image: ala/devops:latest
+    image: gaith/devops:latest
     ports:
       - "8089:8089"
     networks:
