@@ -3,28 +3,25 @@ pipeline {
 
     tools {
         maven 'M2_HOME'
+	MAIN_VERSION = "1.1"
+        BUILD_VERSION = "${MAIN_VERSION}-b${env.BUILD_NUMBER}"
+        DOCKER_CREDENTIALS = credentials('307f196d-c538-49e8-b350-bc5caa31b442')
     }
     stages {
-        stage('Checkout') {
+        stage('Checkout GIT') {
             steps {
                 git branch: 'Gaith-b',
                 url: 'https://github.com/Gaithb/Devops-master.git'
             }
         }    
 
-        stage('Clean') {
+        stage('MVN Clean & Install') {
             steps {
-                sh 'mvn clean'
+                sh 'mvn clean install '
             }
         }
         
-        stage('Build') {
-            steps {
-                sh 'mvn install'
-            }
-        }
-        
-        stage('Test') {
+        stage('Test Junit & Mockito') {
             steps {
                 sh 'mvn test'
             }
@@ -35,54 +32,40 @@ pipeline {
                 sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=sonar'
             }
         }
-        
-        stage('Package') {
+             stage('Docker Build') {
             steps {
                 script {
-                    sh "mvn package -DskipTests=true"
+                    docker.build("ssdrissi/timesheet-devops:${BUILD_VERSION}")
                 }
             }
         }
-        
-        stage('Deploy to Nexus') {
-            steps {
-                script {
-                    sh "mvn deploy"
-                }
-            }
-        }
-        
-        stage('Build Maven Spring') {
-            steps {
-                sh 'mvn clean install'
-            }
-        }
-                         
+        stage('Push Docker Image to DockerHub') {
+                    steps {
+                        script {
+                            withCredentials([usernamePassword(credentialsId: '307f196d-c538-49e8-b350-bc5caa31b442', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
 
-        stage("Maven Build") {
+                            sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
+                            sh "docker push ssdrissi/timesheet-devops:${BUILD_VERSION}"
+                        }
+                    }
+                }
+        }
+        stage('Docker compose (FrontEnd BackEnd MySql)') {
             steps {
                 script {
-                    sh "mvn package -DskipTests=true"
+                    sh '/usr/local/bin/docker-compose up -d'
                 }
             }
         }
-			
-
-        stage('Docker push') {
+	    
+        stage('Deploy to nexus') {
             steps {
-                sh 'echo "Docker is pushing ...."'
-                sh 'docker push $DOCKERHUB_CREDENTIALS_USR/devopsimage:latest'
-            }  
-        }
-        
-        stage('docker compose') {
-            steps {
-                script {
-                    sh 'docker-compose up -d'
-                }
+                echo 'Deploying to Nexus server'
+                sh 'mvn deploy'
             }
         }
     }
+}
     
     post {
         always {
