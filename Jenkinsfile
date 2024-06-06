@@ -48,8 +48,8 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: '20f8a19d-ef23-4271-94fa-e490ba447dc1', variable: 'dockerGaith')]) {
-                        sh 'echo ${dockerGaith} | docker login -u devopshint --password-stdin'
-                        sh 'docker push Gaithb/achat:1.9'
+                        sh '    docker login -u devopshint -p (dockerGaith)'
+                        sh 'docker push Gaithb/achat:1.9.'
                     }
                 }
             }
