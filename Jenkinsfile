@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-  //      MAIN_VERSION = "1.1"
-    //    BUILD_VERSION = "${MAIN_VERSION}-b${env.BUILD_NUMBER}"
-     //   DOCKER_CREDENTIALS = credentials('307f196d-c538-49e8-b350-bc5caa31b442')
+        MAIN_VERSION = "1.1"
+        BUILD_VERSION = "${MAIN_VERSION}-b${env.BUILD_NUMBER}"
+        DOCKER_CREDENTIALS = credentials('20f8a19d-ef23-4271-94fa-e490ba447dc1')
     }
 
     tools {
@@ -40,29 +40,29 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    sh 'docker.build -t Gaithb/achat-1.9 . ' 
+                    sh 'docker build -t Gaithb/achat:1.9 .'
                 }
             }
         }
-    
+
         stage('Push Docker Image to DockerHub') {
             steps {
                 script {
                     withCredentials([string(credentialsId: '20f8a19d-ef23-4271-94fa-e490ba447dc1', variable: 'dockerGaith')]) {
-                    sh 'docker login -u devopshint -p ${dockerGaith}'
-                    sh 'docker push dockerGaith/achat-1.9 .
+                        sh 'docker login -u devopshint -p ${dockerGaith}'
+                        sh 'docker push Gaithb/achat:1.9'
                     }
                 }
             }
         }
 
-       // stage('Docker compose (FrontEnd BackEnd MySql)') {
-         //   steps {
-           //     script {
-             //       sh '/usr/local/bin/docker-compose up -d'
-               // }
-         //   }
-      //  }
+        // stage('Docker compose (FrontEnd BackEnd MySql)') {
+        //     steps {
+        //         script {
+        //             sh '/usr/local/bin/docker-compose up -d'
+        //         }
+        //     }
+        // }
 
         stage('Deploy to Nexus') {
             steps {
