@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        MAIN_VERSION = "1.1"
-        BUILD_VERSION = "${MAIN_VERSION}-b${env.BUILD_NUMBER}"
-        DOCKER_CREDENTIALS = credentials('307f196d-c538-49e8-b350-bc5caa31b442')
+  //      MAIN_VERSION = "1.1"
+    //    BUILD_VERSION = "${MAIN_VERSION}-b${env.BUILD_NUMBER}"
+     //   DOCKER_CREDENTIALS = credentials('307f196d-c538-49e8-b350-bc5caa31b442')
     }
 
     tools {
@@ -37,32 +37,32 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
-            steps {
-                script {
-                    docker.build("ssdrissi/timesheet-devops:${env.BUILD_VERSION}")
-                }
-            }
-        }
+      //  stage('Docker Build') {
+        //    steps {
+          //      script {
+            //        docker.build("ssdrissi/timesheet-devops:${env.BUILD_VERSION}")
+              //  }
+           // }
+        //}
 
-        stage('Push Docker Image to DockerHub') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: '307f196d-c538-49e8-b350-bc5caa31b442', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
-                        sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
-                        sh "docker push ssdrissi/timesheet-devops:${env.BUILD_VERSION}"
-                    }
-                }
-            }
-        }
+       // stage('Push Docker Image to DockerHub') {
+         //   steps {
+           //     script {
+             //       withCredentials([usernamePassword(credentialsId: '307f196d-c538-49e8-b350-bc5caa31b442', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+               //         sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
+                 //       sh "docker push ssdrissi/timesheet-devops:${env.BUILD_VERSION}"
+                  //  }
+               // }
+        //    }
+     //   }
 
-        stage('Docker compose (FrontEnd BackEnd MySql)') {
-            steps {
-                script {
-                    sh '/usr/local/bin/docker-compose up -d'
-                }
-            }
-        }
+       // stage('Docker compose (FrontEnd BackEnd MySql)') {
+         //   steps {
+           //     script {
+             //       sh '/usr/local/bin/docker-compose up -d'
+               // }
+         //   }
+      //  }
 
         stage('Deploy to Nexus') {
             steps {
