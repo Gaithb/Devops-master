@@ -36,7 +36,14 @@ pipeline {
                 sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=sonar'
             }
         }
-
+        
+        stage('Deploy to Nexus') {
+            steps {
+                echo 'Deploying to Nexus server'
+                sh 'mvn deploy'
+            }
+        }
+        
         stage('Docker Build') {
             steps {
                 script {
@@ -67,13 +74,6 @@ pipeline {
             }
         }
 
-        stage('Deploy to Nexus') {
-            steps {
-                echo 'Deploying to Nexus server'
-                sh 'mvn deploy'
-            }
-        }
-    }
         stage('Prometheus Metrics Export') {
             steps {
                 script {
@@ -86,6 +86,7 @@ pipeline {
             }
         }
     }
+
     post {
         always {
             echo 'Pipeline finished.'
