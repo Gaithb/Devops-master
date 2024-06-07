@@ -104,7 +104,7 @@ pipeline {
 
     post {
         always {
-            mail bcc: '', body: '"<br> project: $(env.JOB_Name) <br> build number: $(env.BUILD_NUMBER) <br> url: $(env.BUILD_URL)"', cc: '', from: '', replyTo: '', subject: '${currentBuild.result}', to: 'mohamedgaith.basly@esprit.tn'
+            mail bcc: '', body: """'<br> project: ${env.JOB_NAME}<br/> Build Number: $(env.BUILD_NUMBER)<br/> url: $(env.BUILD_URL)'""", cc: '', from: '', replyTo: '', subject: "'${currentBuild.result}'", to: 'mohamedgaith.basly@esprit.tn'
         }
     }
 }
