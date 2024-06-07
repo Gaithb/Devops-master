@@ -101,14 +101,54 @@ pipeline {
         }
     }
 
-   post {
-        always {
+
+    post {
+        success {
             mail bcc: '',
-                 body: """<br> project: ${env.JOB_NAME}<br/> build number: ${env.BUILD_NUMBER}<br> url: ${env.BUILD_URL}""",
+                 body: """
+                    <html>
+                        <head>
+                            <style>
+                                .success {
+                                    color: green;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h2 class="success">Project Devops Achat Success</h2>
+                            <p class="success">Build Number: ${env.BUILD_NUMBER}</p>
+                            <p class="success">URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                        </body>
+                    </html>
+                 """,
                  cc: '',
                  from: '',
                  replyTo: '',
-                 subject: '${currentBuild.result}',
+                 subject: "Project Devops Achat Success - Build Number: ${env.BUILD_NUMBER}",
+                 to: 'mohamedgaith.basly@esprit.tn'
+        }
+        failure {
+            mail bcc: '',
+                 body: """
+                    <html>
+                        <head>
+                            <style>
+                                .failure {
+                                    color: red;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h2 class="failure">Project Devops Achat Failed</h2>
+                            <p class="failure">Build Number: ${env.BUILD_NUMBER}</p>
+                            <p class="failure">URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                        </body>
+                    </html>
+                 """,
+                 cc: '',
+                 from: '',
+                 replyTo: '',
+                 subject: "Project Devops Achat Failed - Build Number: ${env.BUILD_NUMBER}",
                  to: 'mohamedgaith.basly@esprit.tn'
         }
     }
