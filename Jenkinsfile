@@ -100,19 +100,24 @@ pipeline {
             }
         }
     }
-    
+
+
     post {
         always {
-            echo 'Pipeline finished.'
-        }
-        success {
-            echo 'Pipeline succeeded.'
-            emailext body: 'Your pipeline has succeeded. All stages have been executed successfully.',
-                     subject: 'Pipeline Success Notification',
-                     to: 'mohamedgaith.basly@esprit.tn'
-        }
-        failure {
-            echo 'Pipeline failed.'
+            emailext (
+                subject: "Pipeline Status: ${currentBuild.result}",
+                body: '''<html>
+                            <body>
+                                <p>Build Status: ${currentBuild.result}</p>
+                                <p>Build Number: ${currentBuild.number}</p>
+                                <p>Check the <a href="${env.BUILD_URL}">console output</a>.</p>
+                            </body>
+                           </html>''',
+                to: 'mohamedgaith.basly@esprit.tn',
+                from: 'mohamedgaith.basly@esprit.tn',
+                replyTo: 'mohamedgaith.basly@esprit.tn',
+                mimeType: 'text/html'
+            )
         }
     }
 }
