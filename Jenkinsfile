@@ -15,7 +15,7 @@ pipeline {
         stage('Checkout GIT') {
             steps {
                 git branch: 'Gaith-b',
-                url: 'https://github.com/Gaithb/Devops-master.git'
+                url: 'https://github.com/Gaithb/achat.git'
             }
         }
 
