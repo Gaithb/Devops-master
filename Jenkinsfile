@@ -104,20 +104,7 @@ pipeline {
 
     post {
         always {
-            emailext (
-                subject: "Pipeline Status: ${currentBuild.result}",
-                body: '''<html>
-                            <body>
-                                <p>Build Status: ${currentBuild.result}</p>
-                                <p>Build Number: ${currentBuild.number}</p>
-                                <p>Check the <a href="${env.BUILD_URL}">console output</a>.</p>
-                            </body>
-                           </html>''',
-                to: 'mohamedgaith.basly@esprit.tn',
-                from: 'mohamedgaith.basly@esprit.tn',
-                replyTo: 'mohamedgaith.basly@esprit.tn',
-                mimeType: 'text/html'
-            )
+            mail bcc: '', body: '"<br> project: $(env.JOB_Name) <br> build number: $(env.BUILD_NUMBER) <br> url: $(env.BUILD_URL)"', cc: '', from: '', replyTo: '', subject: '${currentBuild.result}', to: 'mohamedgaith.basly@esprit.tn'
         }
     }
 }
