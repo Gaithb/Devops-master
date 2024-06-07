@@ -74,7 +74,18 @@ pipeline {
             }
         }
     }
+        stage('Prometheus Metrics Export') {
+            steps {
+                script {
+                    // Collect and export metrics in Prometheus format
+                    sh 'mvn clean install' // Example command to run the build
 
+                    // Modify this line to include the Java command with the correct path to the Prometheus plugin JAR
+                    sh 'java -javaagent:/var/lib/jenkins/plugins/prometheus.hpi=8080:/path/to/prometheus-metrics'
+                }
+            }
+        }
+    }
     post {
         always {
             echo 'Pipeline finished.'
