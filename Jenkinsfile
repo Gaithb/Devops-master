@@ -101,14 +101,15 @@ pipeline {
         }
     }
 
-post {
-    always {
-        mail bcc: '', 
-             body: """<br> project: ${env.JOB_NAME} <br> build number: ${env.BUILD_NUMBER} <br> url: ${env.BUILD_URL}""", 
-             cc: '', 
-             from: '', 
-             replyTo: '', 
-             subject: '${currentBuild.result}', 
-             to: 'mohamedgaith.basly@esprit.tn'
+   post {
+        always {
+            mail bcc: '',
+                 body: """<br> project: ${env.JOB_NAME}<br/> build number: ${env.BUILD_NUMBER}<br> url: ${env.BUILD_URL}""",
+                 cc: '',
+                 from: '',
+                 replyTo: '',
+                 subject: '${currentBuild.result}',
+                 to: 'mohamedgaith.basly@esprit.tn'
+        }
     }
 }
