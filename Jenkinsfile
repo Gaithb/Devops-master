@@ -105,9 +105,8 @@ pipeline {
     post {
         success {
             mail bcc: '',
-                 body: """ Project Devops Achat Success
-                            Build Number: ${env.BUILD_NUMBER}
-                            URL: href="${env.BUILD_URL}">${env.BUILD_URL}
+                 body: """ Project Devops Achat Success - Build Number: ${env.BUILD_NUMBER}
+                            URL:"${env.BUILD_URL}">
                  """,
                  cc: '',
                  from: '',
@@ -117,9 +116,8 @@ pipeline {
         }
         failure {
             mail bcc: '',
-                 body: """ Project Devops Achat Failed
-                            Build Number: ${env.BUILD_NUMBER}
-                            URL: href="${env.BUILD_URL}">${env.BUILD_URL}
+                 body: """ Project Devops Achat Failed - Build Number: ${env.BUILD_NUMBER}
+                            URL:"${env.BUILD_URL}"
                  """,
                  cc: '',
                  from: '',
