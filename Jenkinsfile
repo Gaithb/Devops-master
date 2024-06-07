@@ -105,21 +105,9 @@ pipeline {
     post {
         success {
             mail bcc: '',
-                 body: """
-                    <html>
-                        <head>
-                            <style>
-                                .success {
-                                    color: green;
-                                }
-                            </style>
-                        </head>
-                        <body>
-                            <h2 class="success">Project Devops Achat Success</h2>
-                            <p class="success">Build Number: ${env.BUILD_NUMBER}</p>
-                            <p class="success">URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                        </body>
-                    </html>
+                 body: """ Project Devops Achat Success
+                            Build Number: ${env.BUILD_NUMBER}
+                            URL: href="${env.BUILD_URL}">${env.BUILD_URL}
                  """,
                  cc: '',
                  from: '',
@@ -129,21 +117,9 @@ pipeline {
         }
         failure {
             mail bcc: '',
-                 body: """
-                    <html>
-                        <head>
-                            <style>
-                                .failure {
-                                    color: red;
-                                }
-                            </style>
-                        </head>
-                        <body>
-                            <h2 class="failure">Project Devops Achat Failed</h2>
-                            <p class="failure">Build Number: ${env.BUILD_NUMBER}</p>
-                            <p class="failure">URL: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                        </body>
-                    </html>
+                 body: """ Project Devops Achat Failed
+                            Build Number: ${env.BUILD_NUMBER}
+                            URL: href="${env.BUILD_URL}">${env.BUILD_URL}
                  """,
                  cc: '',
                  from: '',
