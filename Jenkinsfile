@@ -40,16 +40,16 @@ pipeline {
             }
         }
 
-//        stage('Generate Report') {
-//            steps {
-//                script {
-//                    // Generate JaCoCo report
-//                    sh 'mvn org.jacoco:jacoco-maven-plugin:report'
-//                }
-//                // Archive JaCoCo report
-//                archiveArtifacts artifacts: 'target/site/jacoco/*', fingerprint: true
-//            }
-//        }
+        // stage('Generate Report') {
+        //     steps {
+        //         script {
+        //             // Generate JaCoCo report
+        //             sh 'mvn org.jacoco:jacoco-maven-plugin:report'
+        //         }
+        //         // Archive JaCoCo report
+        //         archiveArtifacts artifacts: 'target/site/jacoco/*', fingerprint: true
+        //     }
+        // }
 
         stage('SonarQube Analysis') {
             steps {
@@ -99,7 +99,8 @@ pipeline {
                 }
             }
         }
-        
+    }
+    
     post {
         always {
             echo 'Pipeline finished.'
