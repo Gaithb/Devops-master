@@ -19,15 +19,35 @@ pipeline {
             }
         }
 
-        stage('MVN Clean & Install') {
+        stage('Junit|Mockito') {
             steps {
-                sh 'mvn clean install'
+                sh 'mvn test'
             }
         }
 
-        stage('Test Junit & Mockito') {
+        stage('Package') {
             steps {
-                sh 'mvn test'
+                sh 'mvn package'
+            }
+        }       
+        
+        stage('Run Tests with JaCoCo') {
+            steps {
+                script {
+                    // Run tests with JaCoCo coverage
+                    sh 'mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent test'
+                }
+            }
+        }
+
+        stage('Generate Report') {
+            steps {
+                script {
+                    // Generate JaCoCo report
+                    sh 'mvn org.jacoco:jacoco-maven-plugin:report'
+                }
+                // Archive JaCoCo report
+                archiveArtifacts artifacts: 'target/site/jacoco/*', fingerprint: true
             }
         }
 
@@ -37,6 +57,12 @@ pipeline {
             }
         }
         
+        stage('Install') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+
         stage('Deploy to Nexus') {
             steps {
                 echo 'Deploying to Nexus server'
@@ -65,7 +91,7 @@ pipeline {
             }
         }
 
-        stage('Deploy with Docker Compose') {
+        stage('Docker Compose UP') {
             steps {
                 script {
                     sh 'docker-compose down'
@@ -74,7 +100,7 @@ pipeline {
             }
         }
 
-        stage('Prometheus Metrics Export') {
+        stage('Prometheus|Grafana') {
             steps {
                 script {
                     // Collect and export metrics in Prometheus format
@@ -93,6 +119,9 @@ pipeline {
         }
         success {
             echo 'Pipeline succeeded.'
+            emailext body: 'Your pipeline has succeeded. All stages have been executed successfully.',
+                     subject: 'Pipeline Success Notification',
+                     to: 'mohamedgaith.basly@esprit.tn'
         }
         failure {
             echo 'Pipeline failed.'
