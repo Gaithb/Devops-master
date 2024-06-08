@@ -51,26 +51,9 @@ pipeline {
         //     }
         // }
 
-        stage('SonarQube Analysis') {
-            steps {
-                sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=sonar'
-            }
-        }
+//
         
-        stage('Install') {
-            steps {
-                sh 'mvn clean install'
-            }
-        }
-
-        stage('Deploy to Nexus') {
-            steps {
-                echo 'Deploying to Nexus server'
-                sh 'mvn deploy'
-            }
-        }
-        
-        stage('Docker Build') {
+        stage('Docker Build image') {
             steps {
                 script {
                     sh "docker build -t gaihdocker/achat:${BUILD_VERSION} ."
